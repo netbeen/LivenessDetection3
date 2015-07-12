@@ -5,6 +5,11 @@ Controller* Controller::ptr2Controller = nullptr;
 
 Controller::Controller():currentAnalyseIndex(-1)
 {
+    faceAligner = FaceAligner::getInstance();       //提前加载faceAligner
+    faceAlignerThread = new QThread();
+    faceAligner->moveToThread(faceAlignerThread);
+    faceAlignerThread->start();
+
     analyserFactory = new AnalyserFactory();
     QThread::connect(this,SIGNAL(startNextAnalyserSignal()),this,SLOT(startNextAnalyserSlot()));    //由Controller自行调用自身的slot
     webcamCapture = WebcamCapture::getInstance();
@@ -28,6 +33,11 @@ void Controller::start(){
         this->analyserOrder.push_back(elemStr);
     }
     Utils::randomizeVector(this->analyserOrder);
+    std::cout << "------------------------" << std::endl;
+    for(std::string elemStr : this->analyserOrder){
+        std::cout << elemStr << std::endl;
+    }
+    std::cout << "------------------------" << std::endl;
     emit this->startNextAnalyserSignal();
 }
 
@@ -44,6 +54,7 @@ void Controller::startNextAnalyserSlot(){
         QObject::connect(analyser,SIGNAL(done(bool)),this,SLOT(receiveAnalyserResultSlot(bool)));
         analyserThread->start();
         emit this->analyserStartSignal();
+        QObject::disconnect(this,SIGNAL(analyserStartSignal()),analyser,SLOT(start()));
 
     }else{
         std::cout << "All over" << std::endl;

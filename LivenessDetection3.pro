@@ -24,7 +24,12 @@ SOURCES += main.cpp\
     EyeDetector.cpp \
     FaceDetector.cpp \
     BoundingBox.cpp \
-    Utils.cpp
+    Utils.cpp \
+    OpenMouthAnalyser.cpp \
+    ESR/Fern.cpp \
+    ESR/FernCascade.cpp \
+    ESR/ShapeRegressor.cpp \
+    FaceAligner.cpp
 
 HEADERS  += mainwindow.h \
     WebcamCapture.h \
@@ -36,7 +41,10 @@ HEADERS  += mainwindow.h \
     EyeDetector.h \
     FaceDetector.h \
     BoundingBox.h \
-    Utils.h
+    Utils.h \
+    OpenMouthAnalyser.h \
+    ESR.hpp \
+    FaceAligner.h
 
 FORMS    += mainwindow.ui
 

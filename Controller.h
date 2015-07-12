@@ -22,7 +22,9 @@ private:
     std::vector<Analyser*> analyserVector;
     QThread* analyserThread;
     QThread* webcamThread;
+    QThread* faceAlignerThread;
     WebcamCapture* webcamCapture;
+    FaceAligner* faceAligner;
 
 signals:
     void startNextAnalyserSignal();

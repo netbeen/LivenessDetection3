@@ -1,7 +1,7 @@
 #include "BlinkAnalyser.h"
 #include "QThread"
 
-BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(10)
+BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(6),timeoutTimeMs(10000)
 {
     webcamCapture = WebcamCapture::getInstance();
     QObject::connect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
@@ -16,8 +16,7 @@ void BlinkAnalyser::start(){
     std::cout << "BlinkAnalyser at " << QThread::currentThreadId()<< std::endl;
     QObject::connect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
     emit this->webcamStart();
-    timeoutTimer->start(10000);
-
+    timeoutTimer->start(timeoutTimeMs);
 }
 
 void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
@@ -28,7 +27,6 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
             if(this->isEyesOpen == false){
                 this->isEyesOpen = true;
                 this->blinkCount++;
-                //std::cout << this->blinkCount << std::endl;
             }
             Utils::drawRect(this->grayImage, eyesRects,this->faceBoundingBox.returnRect().x,this->faceBoundingBox.returnRect().y);
         }else{                                                                                                                                  //如果没检测到眼睛
@@ -41,7 +39,7 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
     if(blinkCount > this->blinkThreshold){
         this->success();
     }
-    cv::imshow("YY", grayImage);
+    cv::imshow("BlinkAnalyser", grayImage);
 }
 
 void BlinkAnalyser::timeout(){
@@ -49,7 +47,6 @@ void BlinkAnalyser::timeout(){
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
     emit this->done(false);
     std::cout << "BlinkAnalyser Time out!"<<std::endl;
-
 }
 
 void BlinkAnalyser::success(){

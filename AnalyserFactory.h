@@ -2,6 +2,7 @@
 #define ANALYSERFACTORY_H
 
 #include <BlinkAnalyser.h>
+#include <OpenMouthAnalyser.h>
 
 class AnalyserFactory
 {
