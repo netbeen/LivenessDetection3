@@ -39,6 +39,7 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
     if(blinkCount > this->blinkThreshold){
         this->success();
     }
+    cv::moveWindow("BlinkAnalyser",200,160);
     cv::imshow("BlinkAnalyser", grayImage);
 }
 

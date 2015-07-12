@@ -36,6 +36,7 @@ void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
     }else{                                                  //如果没检测到脸
 
     }
+    cv::moveWindow("OpenMouthAnalyser",200,160);
     cv::imshow("OpenMouthAnalyser", grayImage);
 }
 
