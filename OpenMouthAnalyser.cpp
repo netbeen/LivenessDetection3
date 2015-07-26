@@ -13,7 +13,7 @@ OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentVa
 void OpenMouthAnalyser::start(){
     timeoutTimer = new QTimer();
     QObject::connect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
-    QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));
+    QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));      //绑定计时器事件
     std::cout << "OpenMouthAnalyser at " << QThread::currentThreadId()<< std::endl;
     QObject::connect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
     emit this->webcamStart();
@@ -43,6 +43,7 @@ void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
 void OpenMouthAnalyser::timeout(){
     timeoutTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
+    QObject::disconnect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
     std::cout << "OpenMouthAnalyser Time out!"<<std::endl;
     emit this->done(false);
 }

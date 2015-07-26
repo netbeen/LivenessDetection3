@@ -29,7 +29,9 @@ SOURCES += main.cpp\
     ESR/Fern.cpp \
     ESR/FernCascade.cpp \
     ESR/ShapeRegressor.cpp \
-    FaceAligner.cpp
+    FaceAligner.cpp \
+    YawAnalyser.cpp \
+    OpticalFlowCalculater.cpp
 
 HEADERS  += mainwindow.h \
     WebcamCapture.h \
@@ -44,7 +46,9 @@ HEADERS  += mainwindow.h \
     Utils.h \
     OpenMouthAnalyser.h \
     ESR.hpp \
-    FaceAligner.h
+    FaceAligner.h \
+    YawAnalyser.h \
+    OpticalFlowCalculater.h
 
 FORMS    += mainwindow.ui
 

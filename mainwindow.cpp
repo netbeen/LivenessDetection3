@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
     controller = Controller::getInstance();
     QObject::connect(this,SIGNAL(startToRunButtonClicked()),controller,SLOT(start()));
 
-
     ui->setupUi(this);
 }
 

@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
     qRegisterMetaType<BoundingBox>("BoundingBox");
     qRegisterMetaType<cv::Mat_<double>>("cv::Mat_<double>");
 
-
     MainWindow w;
     w.show();
 

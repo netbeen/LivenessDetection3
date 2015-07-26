@@ -46,6 +46,7 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
 void BlinkAnalyser::timeout(){
     timeoutTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
+    QObject::disconnect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
     emit this->done(false);
     std::cout << "BlinkAnalyser Time out!"<<std::endl;
 }

@@ -3,6 +3,7 @@
 
 #include <BlinkAnalyser.h>
 #include <OpenMouthAnalyser.h>
+#include <YawAnalyser.h>
 
 class AnalyserFactory
 {

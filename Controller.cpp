@@ -52,9 +52,10 @@ void Controller::startNextAnalyserSlot(){
         analyserThread = new QThread();
         analyser->moveToThread(analyserThread);
         QObject::connect(analyser,SIGNAL(done(bool)),this,SLOT(receiveAnalyserResultSlot(bool)));
+        std::cout << "NEXT LINE IS START" << std::endl;
         analyserThread->start();
         emit this->analyserStartSignal();
-        QObject::disconnect(this,SIGNAL(analyserStartSignal()),analyser,SLOT(start()));
+        QObject::disconnect(this,SIGNAL(analyserStartSignal()),analyser,SLOT(start()));     //解除与当前线程的控制联系
 
     }else{
         std::cout << "All over" << std::endl;
