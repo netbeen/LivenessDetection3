@@ -1,7 +1,7 @@
 #include "OpenMouthAnalyser.h"
 #include <QThread>
 
-OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentValid(false)
+OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentValid(false),openMouthThreshold(2.5)
 {
     webcamCapture = WebcamCapture::getInstance();
     faceDetector = new FaceDetector();          //faceDetector对象
@@ -12,11 +12,9 @@ OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentVa
 
 void OpenMouthAnalyser::start(){
     timeoutTimer = new QTimer();
-    QObject::connect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
     QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));      //绑定计时器事件
     std::cout << "OpenMouthAnalyser at " << QThread::currentThreadId()<< std::endl;
     QObject::connect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
-    emit this->webcamStart();
     timeoutTimer->start(timeoutTimeMs);
 
 }
@@ -29,7 +27,7 @@ void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
         Utils::drawRect(this->grayImage,this->faceBoundingBox);
         if(this->isCurrentAlignmentValid == true){
             Utils::drawPoint(this->grayImage,this->currentAlignment);
-            if((this->currentAlignment(107,1) - this->currentAlignment(93,1)) > (this->currentAlignment(93,1) - this->currentAlignment(65,1)) * 3 ){
+            if((this->currentAlignment(107,1) - this->currentAlignment(93,1)) > (this->currentAlignment(93,1) - this->currentAlignment(65,1)) * this->openMouthThreshold ){
                 this->success();
             }
         }
@@ -42,15 +40,14 @@ void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
 
 void OpenMouthAnalyser::timeout(){
     timeoutTimer->stop();
-    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
-    QObject::disconnect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
+    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
     std::cout << "OpenMouthAnalyser Time out!"<<std::endl;
     emit this->done(false);
 }
 
 void OpenMouthAnalyser::success(){
     timeoutTimer->stop();
-    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
+    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
     std::cout << "OpenMouthAnalyser success!"<<std::endl;
     emit this->done(true);
 }

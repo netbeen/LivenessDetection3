@@ -7,6 +7,7 @@
 #include <FaceAligner.h>
 #include <QTimer>
 #include <Utils.h>
+#include <OpticalFlowCalculater.h>
 
 class YawAnalyser : public Analyser
 {
@@ -22,18 +23,30 @@ private:
     FaceAligner* faceAligner;
     cv::Mat grayImage;
     BoundingBox faceBoundingBox;
+    OpticalFlowCalculater* opticalFlowCalculater;
+    bool isOpticalFlowCalculaterBusy;
+
+    bool isCurrentAlignmentValid;
+    cv::Mat_<double> currentAlignment;
+    cv::Mat currentOpticalFlow;
+    void separateNromAndAngle();
+    cv::Mat norm;
+    cv::Mat phaseAngle;
 
 public slots:
     virtual void start();
     void receiveNewFrame(cv::Mat newFrame);
-    //void receiveNewOpticalFlow(cv::Mat_<double>);
+    void receiveNewAlignment(cv::Mat_<double>);
+    void receiveNewOpticalFlow(bool isOpticalFlowVaild, cv::Mat newOpticalFlow);
 
 private slots:
     void timeout();
 
 signals:
-    virtual void done(bool result);
-    void webcamStart();
+    void done(bool result);
+    void doAlignment(cv::Mat grayImage, BoundingBox boundingBox);
+    void doCalcOpticalFlow(cv::Mat);
+
 };
 
 #endif // YAWANALYSER_H

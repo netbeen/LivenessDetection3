@@ -10,9 +10,6 @@ public:
 
 public slots:
     virtual void start()=0;
-
-signals:
-    virtual void done(bool result)=0;
 };
 
 #endif // ANALYSER_H

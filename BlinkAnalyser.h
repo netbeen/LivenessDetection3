@@ -38,7 +38,6 @@ private slots:
 
 signals:
     void done(bool result);
-    void webcamStart();
 };
 
 #endif // BLINKANALYSER_H

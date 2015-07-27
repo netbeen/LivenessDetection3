@@ -25,6 +25,7 @@ private:
     void success();
     cv::Mat_<double> currentAlignment;
     bool isCurrentAlignmentValid;
+    const float openMouthThreshold;
 
 public slots:
     virtual void start();
@@ -36,7 +37,6 @@ private slots:
 
 signals:
     void done(bool result);
-    void webcamStart();
     void doAlignment(cv::Mat grayImage, BoundingBox boundingBox);
 };
 

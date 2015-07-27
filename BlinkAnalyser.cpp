@@ -4,7 +4,6 @@
 BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(6),timeoutTimeMs(10000)
 {
     webcamCapture = WebcamCapture::getInstance();
-    QObject::connect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
     faceDetector = new FaceDetector();          //faceDetector对象
     eyeDetector = new EyeDetector();            //eyeDetector对象
 
@@ -15,7 +14,6 @@ void BlinkAnalyser::start(){
     QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));
     std::cout << "BlinkAnalyser at " << QThread::currentThreadId()<< std::endl;
     QObject::connect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
-    emit this->webcamStart();
     timeoutTimer->start(timeoutTimeMs);
 }
 
@@ -45,15 +43,14 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
 
 void BlinkAnalyser::timeout(){
     timeoutTimer->stop();
-    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
-    QObject::disconnect(this,SIGNAL(webcamStart()),webcamCapture,SLOT(start()));
+    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
     emit this->done(false);
     std::cout << "BlinkAnalyser Time out!"<<std::endl;
 }
 
 void BlinkAnalyser::success(){
     timeoutTimer->stop();
-    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));
+    QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
     emit this->done(true);
     std::cout << "BlinkAnalyser success!"<<std::endl;
 }

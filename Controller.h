@@ -6,6 +6,8 @@
 #include <vector>
 #include <QThread>
 #include <Utils.h>
+#include <WebcamCapture.h>
+#include <OpticalFlowCalculater.h>
 
 class Controller : public QObject
 {
@@ -25,10 +27,13 @@ private:
     QThread* faceAlignerThread;
     WebcamCapture* webcamCapture;
     FaceAligner* faceAligner;
+    OpticalFlowCalculater* opticalFlowCalculater;
+    QThread* opticalFlowCalculaterThread;
 
 signals:
     void startNextAnalyserSignal();
     void analyserStartSignal();
+    void webcamStart();
 
 public slots:
     void start();
