@@ -22,16 +22,28 @@ private:
     FaceDetector* faceDetector;
     FaceAligner* faceAligner;
     cv::Mat grayImage;
+    cv::Mat imageToDisplay;
     BoundingBox faceBoundingBox;
     OpticalFlowCalculater* opticalFlowCalculater;
-    bool isOpticalFlowCalculaterBusy;
-
     bool isCurrentAlignmentValid;
+    bool isOpticalFlowCalculaterBusy;
+    cv::Mat_<int> zoneMap;
+
+    std::vector<double> faceNormalVector;
+    std::vector<double> leftBackgroundNormalVector;
+    std::vector<double> rightBackgroundNormalVector;
+
+
+    void recordIntoVectors();
     cv::Mat_<double> currentAlignment;
     cv::Mat currentOpticalFlow;
     void separateNromAndAngle();
     cv::Mat norm;
     cv::Mat phaseAngle;
+    void calculateZoneMap();
+    void displayZoneMap();
+
+    enum zone{noArea,face, leftBackground,rightBackground};
 
 public slots:
     virtual void start();

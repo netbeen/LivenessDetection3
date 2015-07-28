@@ -10,7 +10,7 @@ Controller::Controller():currentAnalyseIndex(-1)
     this->opticalFlowCalculater->moveToThread(this->opticalFlowCalculaterThread);
     this->opticalFlowCalculaterThread->start();
 
-    faceAligner = FaceAligner::getInstance();       //提前加载faceAligner
+    this->faceAligner = FaceAligner::getInstance();       //提前加载faceAligner
     faceAlignerThread = new QThread();
     faceAligner->moveToThread(faceAlignerThread);
     faceAlignerThread->start();

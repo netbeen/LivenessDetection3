@@ -20,7 +20,7 @@ void OpticalFlowCalculater::doCalc(cv::Mat grayImg){
         this->previousFrame = grayImg;
         emit this->calcCompete(false, this->flow);
     }else{
-        calcOpticalFlowFarneback(this->previousFrame, grayImg, this->flow, 0.1, 1, 50, 3, 7, 1.5, 0);
+        calcOpticalFlowFarneback(this->previousFrame, grayImg, this->flow, 0.5, 3, 40, 3, 7, 1.5, 0);
         emit this->calcCompete(true, this->flow);
     }
 }

@@ -141,3 +141,26 @@ double Utils::calculate_covariance(const vector<double>& v_1, const vector<doubl
     }
     return exp_3 / v_1.size();
 }
+
+double Utils::calculateStandardDeviation(const vector<double>& v) {
+    assert(v.size() != 0);
+    double sum = 0;
+    double squareSum = 0;
+    for(double elem : v){
+        sum += elem;
+        squareSum += elem*elem;
+    }
+    double expection = sum / v.size();
+    double squareSumExpection = squareSum / v.size();
+    return sqrt(squareSumExpection-(expection*expection));
+
+}
+
+double Utils::calculatePearsonCorrelation(const vector<double>& v_1, const vector<double>& v_2) {
+    assert(v_1.size() == v_2.size());
+    assert(v_1.size() != 0);
+    double cov = Utils::calculate_covariance(v_1,v_2);
+    double standardDeviation1 = Utils::calculateStandardDeviation(v_1);
+    double standardDeviation2 = Utils::calculateStandardDeviation(v_2);
+    return cov/(standardDeviation1*standardDeviation2);
+}
