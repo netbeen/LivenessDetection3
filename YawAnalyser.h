@@ -33,6 +33,9 @@ private:
     std::vector<double> leftBackgroundNormalVector;
     std::vector<double> rightBackgroundNormalVector;
 
+    std::vector<double> facePhaseVector;
+    std::vector<double> leftBackgroundPhaseVector;
+    std::vector<double> rightBackgroundPhaseVector;
 
     void recordIntoVectors();
     cv::Mat_<double> currentAlignment;

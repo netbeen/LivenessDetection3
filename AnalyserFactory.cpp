@@ -2,9 +2,9 @@
 
 AnalyserFactory::AnalyserFactory()
 {
-    //analyserType.insert("blink");
+    analyserType.insert("blink");
     analyserType.insert("yaw");
-    //analyserType.insert("openMouth");
+    analyserType.insert("openMouth");
 }
 
 Analyser* AnalyserFactory::createAnalyser(std::string inputType){

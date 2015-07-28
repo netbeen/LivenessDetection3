@@ -15,7 +15,7 @@ YawAnalyser::YawAnalyser():totalProgressTimeMS(10000),isCurrentAlignmentValid(fa
     QObject::connect(opticalFlowCalculater,SIGNAL(calcCompete(bool,cv::Mat)),this,SLOT(receiveNewOpticalFlow(bool,cv::Mat)));
 
     this->norm = cv::Mat(600,800, CV_32FC1);//声明光流模的矩阵
-    this->phaseAngle = cv::Mat(600,800, CV_8UC1);
+    this->phaseAngle = cv::Mat(600,800, CV_32FC1);
     this->zoneMap = cv::Mat(600,800,CV_8UC1);
 }
 
@@ -39,20 +39,41 @@ void YawAnalyser::timeout(){
 
     /////////////////////
     std::cout << "捕获到光流总帧数：" <<this->leftBackgroundNormalVector.size() <<std::endl;
-    std::cout << Utils::calculatePearsonCorrelation(this->faceNormalVector,this->leftBackgroundNormalVector) <<std::endl;
-    std::cout << Utils::calculatePearsonCorrelation(this->faceNormalVector,this->rightBackgroundNormalVector) <<std::endl;
+    std::cout << "左模" << Utils::calculatePearsonCorrelation(this->faceNormalVector,this->leftBackgroundNormalVector) <<std::endl;
+    std::cout << "右模"<< Utils::calculatePearsonCorrelation(this->faceNormalVector,this->rightBackgroundNormalVector) <<std::endl;
+    std::cout << "左相位"<< Utils::calculatePearsonCorrelation(this->facePhaseVector,this->leftBackgroundPhaseVector) <<std::endl;
+    std::cout << "右相位"<< Utils::calculatePearsonCorrelation(this->facePhaseVector,this->rightBackgroundPhaseVector) <<std::endl;
+
+    /*std::cout << "face: ";
+    for(double elem : this->faceNormalVector){
+        std::cout << elem <<"\t";
+    }
+    std::cout << std::endl;
+
+    std::cout << "left: ";
+    for(double elem : this->leftBackgroundNormalVector){
+        std::cout << elem << "\t";
+    }
+    std::cout << std::endl;*/
+
     ////////////////////
 
     emit this->done(true);
 }
 
+//static int count = 0;
+
 //接收新图像的slot
 void YawAnalyser::receiveNewFrame(cv::Mat newFrame){
+
     cv::cvtColor(newFrame,this->grayImage,cv::COLOR_BGR2GRAY);
     this->imageToDisplay = this->grayImage.clone();
     if (this->faceDetector->detect(this->grayImage,5, this->faceBoundingBox)) {       //调用FaceDetector，如果检测到脸
+
         emit this->doAlignment(this->grayImage, this->faceBoundingBox); //进行人脸对齐
+
         if(this->isCurrentAlignmentValid == true){
+
             if(isOpticalFlowCalculaterBusy){
                 //光流计算器繁忙，跳过本轮
             }else{
@@ -67,8 +88,9 @@ void YawAnalyser::receiveNewFrame(cv::Mat newFrame){
     }else{                                                  //如果没检测到脸
 
     }
-    //cv::moveWindow("Yaw",0,160);
-    //cv::imshow("Yaw", imageToDisplay);
+    //std::cout << count++ << std::endl;
+    cv::moveWindow("Yaw",0,160);
+    cv::imshow("Yaw", imageToDisplay);
 }
 
 //接收新对齐的slot
@@ -106,22 +128,23 @@ void YawAnalyser::separateNromAndAngle(){
             float normValue = std::sqrt(std::pow(flow_at_point[0],2)+std::pow(flow_at_point[1],2));
             this->norm.at<float>(rowIndex, columnIndex)=normValue;
             float angleValue = atan2(flow_at_point[0],flow_at_point[1]);
-            uchar angleValueUchar = static_cast<uchar>(((angleValue/3.1415926*180)/180*127)+127);		//将float的-pi到pi的值映射到0-255的uchar来显示
-            this->phaseAngle.at<uchar>(rowIndex, columnIndex)=angleValueUchar;
+            //uchar angleValueUchar = static_cast<uchar>(((angleValue/3.1415926*180)/180*127)+127);		//将float的-pi到pi的值映射到0-255的uchar来显示
+            //this->phaseAngle.at<uchar>(rowIndex, columnIndex)=angleValueUchar;
+            this->phaseAngle.at<float>(rowIndex, columnIndex)=angleValue;
         }
     }
 }
 
-//计算区域映射图
-//opencv坐标系中:(屏幕上方为X轴，屏幕左侧为Y轴)
+//计算区域映射图: opencv坐标系中(屏幕上方为X轴，屏幕左侧为Y轴)
 void  YawAnalyser::calculateZoneMap(){
     for(int rowIndex = 0; rowIndex < this->grayImage.rows; ++rowIndex){
         for(int columnIndex = 0; columnIndex < this->grayImage.cols; ++columnIndex){
             if(columnIndex > this->currentAlignment.at<double>(0,0) && columnIndex < this->currentAlignment.at<double>(40,0) && rowIndex > this->faceBoundingBox.startY && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
                 this->zoneMap.at<int>(rowIndex,columnIndex)=zone::face;
-            }else if(columnIndex < this->faceBoundingBox.startX && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
+            //}else if(columnIndex < this->faceBoundingBox.startX && columnIndex < this->currentAlignment.at<double>(0,0) && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
+            }else if(columnIndex > this->currentAlignment.at<double>(0,0)-this->faceBoundingBox.width/2 && columnIndex < this->faceBoundingBox.startX && columnIndex < this->currentAlignment.at<double>(0,0) && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
                 this->zoneMap.at<int>(rowIndex,columnIndex)=zone::leftBackground;
-            }else if(columnIndex > this->faceBoundingBox.startX+this->faceBoundingBox.width && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
+            }else if(columnIndex < this->currentAlignment.at<double>(40,0)+this->faceBoundingBox.width/2  && columnIndex > this->faceBoundingBox.startX+this->faceBoundingBox.width && columnIndex > this->currentAlignment.at<double>(40,0) && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
                 this->zoneMap.at<int>(rowIndex,columnIndex)=zone::rightBackground;
             }
             else{
@@ -141,16 +164,16 @@ void YawAnalyser::displayZoneMap(){
     cv::Mat zoneMapToDisplay = cv::Mat(600,800, CV_8UC3);
     for(int rowIndex = 0; rowIndex < zoneMapToDisplay.rows; ++rowIndex){
         for(int columnIndex = 0; columnIndex < zoneMapToDisplay.cols; ++columnIndex){
-           if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::face){
+            if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::face){
                 zoneMapToDisplay.at<cv::Vec3b>(rowIndex, columnIndex)=blue;
-           }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::leftBackground){
+            }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::leftBackground){
                 zoneMapToDisplay.at<cv::Vec3b>(rowIndex, columnIndex)=green;
-           }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::rightBackground){
+            }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::rightBackground){
                 zoneMapToDisplay.at<cv::Vec3b>(rowIndex, columnIndex)=green2;
-           }
-           else{
+            }
+            else{
                 zoneMapToDisplay.at<cv::Vec3b>(rowIndex, columnIndex)=red;
-           }
+            }
         }
     }
     cv::moveWindow("ZoneMap",1200,160);
@@ -162,21 +185,28 @@ void YawAnalyser::recordIntoVectors(){
     float sumNormLeftground = 0;
     float sumNormRightground = 0;
 
+    float sumPhaseFace = 0;
+    float sumPhaseLeftground = 0;
+    float sumPhaseRightground = 0;
+
     int countFace = 0;
     int countLeftground = 0;
     int countRightground = 0;
     for(int rowIndex = 0; rowIndex < this->norm.rows; ++rowIndex){
         for(int columnIndex = 0; columnIndex < this->norm.cols; ++columnIndex){
-           if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::face){
-               countFace++;
+            if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::face){
+                countFace++;
                 sumNormFace += norm.at<float>(rowIndex, columnIndex);
-           }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::leftBackground){
-               countLeftground++;
+                sumPhaseFace += phaseAngle.at<float>(rowIndex,columnIndex);
+            }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::leftBackground){
+                countLeftground++;
                 sumNormLeftground += norm.at<float>(rowIndex, columnIndex);
-           }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::rightBackground){
-               countRightground++;
+                sumPhaseLeftground += phaseAngle.at<float>(rowIndex,columnIndex);
+            }else if(this->zoneMap.at<int>(rowIndex,columnIndex) == zone::rightBackground){
+                countRightground++;
                 sumNormRightground += norm.at<float>(rowIndex, columnIndex);
-           }
+                sumPhaseRightground += phaseAngle.at<float>(rowIndex,columnIndex);
+            }
         }
     }
     float expectionNormFace = sumNormFace/countFace;
@@ -186,4 +216,9 @@ void YawAnalyser::recordIntoVectors(){
     this->faceNormalVector.push_back(expectionNormFace);
     this->leftBackgroundNormalVector.push_back(expectionNormLeftground);
     this->rightBackgroundNormalVector.push_back(expectionNormRightground);
+
+    this->facePhaseVector.push_back(sumPhaseFace/countFace);
+    this->leftBackgroundPhaseVector.push_back(sumPhaseLeftground/countLeftground);
+    this->rightBackgroundPhaseVector.push_back(sumPhaseRightground/countRightground);
+
 }
