@@ -139,9 +139,10 @@ void YawAnalyser::separateNromAndAngle(){
 void  YawAnalyser::calculateZoneMap(){
     for(int rowIndex = 0; rowIndex < this->grayImage.rows; ++rowIndex){
         for(int columnIndex = 0; columnIndex < this->grayImage.cols; ++columnIndex){
-            if(columnIndex > this->currentAlignment.at<double>(0,0) && columnIndex < this->currentAlignment.at<double>(40,0) && rowIndex > this->faceBoundingBox.startY && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
+            if(columnIndex > this->currentAlignment.at<double>(0,0) && columnIndex < this->currentAlignment.at<double>(40,0)
+               && rowIndex > this->faceBoundingBox.startY && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height
+               && this->isSinglePointInFace(rowIndex,columnIndex)){
                 this->zoneMap.at<int>(rowIndex,columnIndex)=zone::face;
-            //}else if(columnIndex < this->faceBoundingBox.startX && columnIndex < this->currentAlignment.at<double>(0,0) && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
             }else if(columnIndex > this->currentAlignment.at<double>(0,0)-this->faceBoundingBox.width/2 && columnIndex < this->faceBoundingBox.startX && columnIndex < this->currentAlignment.at<double>(0,0) && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
                 this->zoneMap.at<int>(rowIndex,columnIndex)=zone::leftBackground;
             }else if(columnIndex < this->currentAlignment.at<double>(40,0)+this->faceBoundingBox.width/2  && columnIndex > this->faceBoundingBox.startX+this->faceBoundingBox.width && columnIndex > this->currentAlignment.at<double>(40,0) && rowIndex < this->faceBoundingBox.startY+this->faceBoundingBox.height){
@@ -151,6 +152,37 @@ void  YawAnalyser::calculateZoneMap(){
                 this->zoneMap.at<int>(rowIndex,columnIndex)=zone::noArea;
             }
         }
+    }
+}
+
+
+bool YawAnalyser::isSinglePointInFace(int rowIndex, int columnIndex){
+    if(columnIndex <= this->currentAlignment.at<double>(20,0)){
+        for(int keypointIndex = 0; keypointIndex <= 20; keypointIndex++){
+            if(rowIndex > this->currentAlignment.at<double>(keypointIndex,1)){
+                continue;
+            }else{
+                if(columnIndex < this->currentAlignment.at<double>(keypointIndex,0)){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        return false;
+    }else{
+        for(int keypointIndex = 40; keypointIndex >= 20; keypointIndex--){
+            if(rowIndex > this->currentAlignment.at<double>(keypointIndex,1)){
+                continue;
+            }else{
+                if(columnIndex > this->currentAlignment.at<double>(keypointIndex,0)){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 
@@ -180,6 +212,7 @@ void YawAnalyser::displayZoneMap(){
     cv::imshow("ZoneMap",zoneMapToDisplay);
 }
 
+//记录当前数据
 void YawAnalyser::recordIntoVectors(){
     float sumNormFace = 0;
     float sumNormLeftground = 0;

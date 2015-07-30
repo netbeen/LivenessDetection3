@@ -37,6 +37,7 @@ private:
     std::vector<double> leftBackgroundPhaseVector;
     std::vector<double> rightBackgroundPhaseVector;
 
+    bool isSinglePointInFace(int rowIndex, int columnIndex);
     void recordIntoVectors();
     cv::Mat_<double> currentAlignment;
     cv::Mat currentOpticalFlow;
