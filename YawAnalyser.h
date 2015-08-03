@@ -30,6 +30,7 @@ private:
     bool isOpticalFlowCalculaterBusy;
     cv::Mat_<int> zoneMap;
     double sliderPhase;
+    bool isProgressTimeout;
 
     std::vector<double> faceNormalVector;
     std::vector<double> leftBackgroundNormalVector;
@@ -58,8 +59,9 @@ public slots:
     void receiveNewOpticalFlow(bool isOpticalFlowVaild, cv::Mat newOpticalFlow);
 
 private slots:
-    void timeout();
+    void finish();
     void updateSliderTimeout();
+    void progressTimeout();
 
 signals:
     void done(bool result);

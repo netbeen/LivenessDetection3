@@ -2,7 +2,7 @@
 #include <cmath>
 
 //构造函数
-YawAnalyser::YawAnalyser():totalProgressTimeMS(5000),isCurrentAlignmentValid(false),isOpticalFlowCalculaterBusy(false),sliderPhase(0)
+YawAnalyser::YawAnalyser():totalProgressTimeMS(5000),isCurrentAlignmentValid(false),isOpticalFlowCalculaterBusy(false),sliderPhase(0),isProgressTimeout(false)
 {
     this->webcamCapture = WebcamCapture::getInstance();
     this->faceDetector = new FaceDetector();          //faceDetector对象
@@ -23,13 +23,17 @@ YawAnalyser::YawAnalyser():totalProgressTimeMS(5000),isCurrentAlignmentValid(fal
 void YawAnalyser::start(){
     std::cout << "YawAnalyser at " << QThread::currentThreadId()<< std::endl;
     QObject::connect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));  //绑定接收摄像头事件
-
+    isProgressTimeout=false;
     this->progressTimer = new QTimer();
-    QObject::connect(this->progressTimer,SIGNAL(timeout()),this,SLOT(timeout()));      //绑定计时器事件
+    QObject::connect(this->progressTimer,SIGNAL(timeout()),this,SLOT(progressTimeout()));      //绑定计时器事件
     this->updateSliderTimer = new QTimer();
     QObject::connect(this->updateSliderTimer,SIGNAL(timeout()),this,SLOT(updateSliderTimeout()));
     this->progressTimer->start(totalProgressTimeMS);
     this->updateSliderTimer->start(totalProgressTimeMS/1000);
+}
+
+void YawAnalyser::progressTimeout(){
+    isProgressTimeout=true;
 }
 
 void YawAnalyser::updateSliderTimeout(){
@@ -37,10 +41,13 @@ void YawAnalyser::updateSliderTimeout(){
     float currentY = 50*(sin(this->sliderPhase/1000*4*3.1415926)+1);
     this->sliderPhase++;
     emit this->updateSlider(currentY);
+    if(isProgressTimeout && currentY <= 50){
+        this->finish();
+    }
 }
 
 //摇头测试结束，开始计算结果
-void YawAnalyser::timeout(){
+void YawAnalyser::finish(){
     this->progressTimer->stop();
     this->updateSliderTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
