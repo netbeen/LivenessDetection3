@@ -34,20 +34,24 @@ void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
     }else{                                                  //如果没检测到脸
 
     }
-    cv::moveWindow("OpenMouthAnalyser",200,160);
-    cv::imshow("OpenMouthAnalyser", grayImage);
+    //cv::moveWindow("OpenMouthAnalyser",200,160);
+    //cv::imshow("OpenMouthAnalyser", grayImage);
 }
 
 void OpenMouthAnalyser::timeout(){
+
     timeoutTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
+    //cv::destroyAllWindows();
     std::cout << "OpenMouthAnalyser Time out!"<<std::endl;
     emit this->done(false);
 }
 
 void OpenMouthAnalyser::success(){
+
     timeoutTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
+    cv::destroyAllWindows();
     std::cout << "OpenMouthAnalyser success!"<<std::endl;
     emit this->done(true);
 }

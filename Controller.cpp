@@ -35,6 +35,7 @@ Controller* Controller::getInstance(){
 
 void Controller::start(){
     std::cout << "Controller at " << QThread::currentThreadId()<< std::endl;
+    this->currentAnalyseIndex = -1;
     analyserOrder.clear();
     for(std::string elemStr : analyserFactory->analyserType){
         this->analyserOrder.push_back(elemStr);
@@ -59,6 +60,7 @@ void Controller::startNextAnalyserSlot(){
         analyserThread = new QThread();
         analyser->moveToThread(analyserThread);
         QObject::connect(analyser,SIGNAL(done(bool)),this,SLOT(receiveAnalyserResultSlot(bool)));
+        QObject::connect(analyser,SIGNAL(updateSlider(int)),this,SLOT(receiveSliderPercentage(int)));
         analyserThread->start();
         emit this->analyserStartSignal();
         QObject::disconnect(this,SIGNAL(analyserStartSignal()),analyser,SLOT(start()));     //解除与当前线程的控制联系
@@ -74,4 +76,8 @@ void Controller::receiveAnalyserResultSlot(bool result){
     }else{
         std::cout << "Controller deny" <<std::endl;
     }
+}
+
+void Controller::receiveSliderPercentage(int percentage){
+    emit this->updateSlider(percentage);
 }

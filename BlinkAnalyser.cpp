@@ -37,20 +37,25 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
     if(blinkCount > this->blinkThreshold){
         this->success();
     }
-    cv::moveWindow("BlinkAnalyser",200,160);
-    cv::imshow("BlinkAnalyser", grayImage);
+    //cv::moveWindow("BlinkAnalyser",200,160);
+    //cv::imshow("BlinkAnalyser", grayImage);
 }
 
 void BlinkAnalyser::timeout(){
+
     timeoutTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
+    //cv::destroyAllWindows();
     emit this->done(false);
     std::cout << "BlinkAnalyser Time out!"<<std::endl;
 }
 
 void BlinkAnalyser::success(){
+
     timeoutTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
+    //cv::destroyAllWindows();
     emit this->done(true);
     std::cout << "BlinkAnalyser success!"<<std::endl;
+
 }

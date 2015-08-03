@@ -28,6 +28,7 @@ signals:
 
 public slots:
     void updateImage(cv::Mat newImage);
+    void receiveSliderPercentage(int percentage);
 
 private slots:
     void on_startToRunButton_clicked();

@@ -2,7 +2,7 @@
 #include <cmath>
 
 //构造函数
-YawAnalyser::YawAnalyser():totalProgressTimeMS(10000),isCurrentAlignmentValid(false),isOpticalFlowCalculaterBusy(false)
+YawAnalyser::YawAnalyser():totalProgressTimeMS(5000),isCurrentAlignmentValid(false),isOpticalFlowCalculaterBusy(false),sliderPhase(0)
 {
     this->webcamCapture = WebcamCapture::getInstance();
     this->faceDetector = new FaceDetector();          //faceDetector对象
@@ -26,15 +26,27 @@ void YawAnalyser::start(){
 
     this->progressTimer = new QTimer();
     QObject::connect(this->progressTimer,SIGNAL(timeout()),this,SLOT(timeout()));      //绑定计时器事件
+    this->updateSliderTimer = new QTimer();
+    QObject::connect(this->updateSliderTimer,SIGNAL(timeout()),this,SLOT(updateSliderTimeout()));
     this->progressTimer->start(totalProgressTimeMS);
+    this->updateSliderTimer->start(totalProgressTimeMS/1000);
+}
+
+void YawAnalyser::updateSliderTimeout(){
+
+    float currentY = 50*(sin(this->sliderPhase/1000*4*3.1415926)+1);
+    this->sliderPhase++;
+    emit this->updateSlider(currentY);
 }
 
 //摇头测试结束，开始计算结果
 void YawAnalyser::timeout(){
     this->progressTimer->stop();
+    this->updateSliderTimer->stop();
     QObject::disconnect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));   //解绑接收摄像头事件
     QObject::disconnect(this,SIGNAL(doCalcOpticalFlow(cv::Mat)),this->opticalFlowCalculater,SLOT(doCalc(cv::Mat)));     //解绑光流计算事件
     QObject::disconnect(opticalFlowCalculater,SIGNAL(calcCompete(bool,cv::Mat)),this,SLOT(receiveNewOpticalFlow(bool,cv::Mat)));    //解绑接受光流事件
+    //cv::destroyAllWindows();
     std::cout << "YawAnalyser Time out!"<<std::endl;
 
     /////////////////////
@@ -43,20 +55,6 @@ void YawAnalyser::timeout(){
     std::cout << "右模"<< Utils::calculatePearsonCorrelation(this->faceNormalVector,this->rightBackgroundNormalVector) <<std::endl;
     std::cout << "左相位"<< Utils::calculatePearsonCorrelation(this->facePhaseVector,this->leftBackgroundPhaseVector) <<std::endl;
     std::cout << "右相位"<< Utils::calculatePearsonCorrelation(this->facePhaseVector,this->rightBackgroundPhaseVector) <<std::endl;
-
-    /*std::cout << "face: ";
-    for(double elem : this->faceNormalVector){
-        std::cout << elem <<"\t";
-    }
-    std::cout << std::endl;
-
-    std::cout << "left: ";
-    for(double elem : this->leftBackgroundNormalVector){
-        std::cout << elem << "\t";
-    }
-    std::cout << std::endl;*/
-
-    ////////////////////
 
     emit this->done(true);
 }
@@ -89,8 +87,8 @@ void YawAnalyser::receiveNewFrame(cv::Mat newFrame){
 
     }
     //std::cout << count++ << std::endl;
-    cv::moveWindow("Yaw",0,160);
-    cv::imshow("Yaw", imageToDisplay);
+    //cv::moveWindow("Yaw",0,160);
+    //cv::imshow("Yaw", imageToDisplay);
 }
 
 //接收新对齐的slot
@@ -104,16 +102,16 @@ void YawAnalyser::receiveNewOpticalFlow(bool isOpticalFlowVaild, cv::Mat newOpti
 
     if(isOpticalFlowVaild){
 
-        displayZoneMap();   //DEBUG：显示区域映射图
+        //displayZoneMap();   //DEBUG：显示区域映射图
 
         this->currentOpticalFlow = newOpticalFlow;
         this->separateNromAndAngle();
         this->recordIntoVectors();
 
-        cv::moveWindow("norm",600,160);
+        /*cv::moveWindow("norm",600,160);
         cv::imshow("norm", this->norm);
         cv::moveWindow("phaseAngle",600,760);
-        cv::imshow("phaseAngle", this->phaseAngle);
+        cv::imshow("phaseAngle", this->phaseAngle);*/
     }else{
 
     }

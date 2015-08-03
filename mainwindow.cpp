@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     controller = Controller::getInstance();
     QObject::connect(this,SIGNAL(startToRunButtonClicked()),controller,SLOT(start()));
+    QObject::connect(controller,SIGNAL(updateSlider(int)),this,SLOT(receiveSliderPercentage(int))); //从controller传来的滑块percentage
 
     ui->setupUi(this);
 }
@@ -27,4 +28,8 @@ void MainWindow::updateImage(cv::Mat newImage){
 void MainWindow::on_startToRunButton_clicked()
 {
     emit startToRunButtonClicked();
+}
+
+void MainWindow::receiveSliderPercentage(int percentage){
+    this->ui->horizontalSlider->setValue(percentage);
 }

@@ -34,11 +34,13 @@ signals:
     void startNextAnalyserSignal();
     void analyserStartSignal();
     void webcamStart();
+    void updateSlider(int percentage);
 
 public slots:
     void start();
     void startNextAnalyserSlot();
     void receiveAnalyserResultSlot(bool result);
+    void receiveSliderPercentage(int percentage);
 
 };
 

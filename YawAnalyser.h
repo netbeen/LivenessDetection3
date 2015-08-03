@@ -18,6 +18,7 @@ public:
 private:
     const int totalProgressTimeMS;
     QTimer* progressTimer;
+    QTimer* updateSliderTimer;
     WebcamCapture* webcamCapture;
     FaceDetector* faceDetector;
     FaceAligner* faceAligner;
@@ -28,6 +29,7 @@ private:
     bool isCurrentAlignmentValid;
     bool isOpticalFlowCalculaterBusy;
     cv::Mat_<int> zoneMap;
+    double sliderPhase;
 
     std::vector<double> faceNormalVector;
     std::vector<double> leftBackgroundNormalVector;
@@ -57,6 +59,7 @@ public slots:
 
 private slots:
     void timeout();
+    void updateSliderTimeout();
 
 signals:
     void done(bool result);
