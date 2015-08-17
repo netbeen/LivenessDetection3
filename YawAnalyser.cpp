@@ -32,12 +32,13 @@ void YawAnalyser::start(){
     this->updateSliderTimer->start(totalProgressTimeMS/1000);
 }
 
+//定时器到时，允许程序结束，为了弥补程序耗时，让slider到50的时候自行结束。
 void YawAnalyser::progressTimeout(){
     isProgressTimeout=true;
 }
 
+//slider更新计时器
 void YawAnalyser::updateSliderTimeout(){
-
     float currentY = 50*(sin(this->sliderPhase/1000*4*3.1415926)+1);
     this->sliderPhase++;
     emit this->updateSlider(currentY);

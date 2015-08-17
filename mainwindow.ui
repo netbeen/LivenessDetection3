@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1900</width>
+    <width>1160</width>
     <height>794</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <widget class="QLabel" name="imageLabel">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>180</x>
       <y>120</y>
       <width>800</width>
       <height>600</height>
@@ -43,9 +43,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>0</y>
-      <width>1891</width>
+      <width>1141</width>
       <height>81</height>
      </rect>
     </property>
@@ -72,82 +72,10 @@ QSlider::handle:horizontal {
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>352</x>
-      <y>130</y>
-      <width>166</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>主窗口帧率</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="mainFrameRateLabel">
-       <property name="minimumSize">
-        <size>
-         <width>41</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>帧/秒</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>160</y>
-      <width>171</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>人脸配准帧率</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="faceAlignmentFrameRate">
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>帧/秒</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>170</x>
       <y>90</y>
       <width>820</width>
       <height>651</height>
@@ -161,7 +89,7 @@ QSlider::handle:horizontal {
 }</string>
     </property>
     <property name="title">
-     <string>主视频</string>
+     <string>Video Capture</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -173,48 +101,93 @@ QSlider::handle:horizontal {
    <widget class="QPushButton" name="startToRunButton">
     <property name="geometry">
      <rect>
-      <x>1360</x>
+      <x>1000</x>
       <y>640</y>
       <width>111</width>
       <height>101</height>
      </rect>
     </property>
     <property name="text">
-     <string>开始认证</string>
+     <string>Start</string>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget_2">
+   <widget class="QLabel" name="mainFrameRateLabel">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>190</y>
-      <width>141</width>
-      <height>22</height>
+      <x>1120</x>
+      <y>100</y>
+      <width>30</width>
+      <height>20</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>光流帧率</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="opticalFlowFrameRate">
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>帧/秒</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>100</y>
+      <width>61</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Main FR:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>1010</x>
+      <y>131</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Alignment FR:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="faceAlignmentFrameRate">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>131</y>
+      <width>30</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>161</y>
+      <width>60</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Flow FR:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="opticalFlowFrameRate">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>160</y>
+      <width>30</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
    </widget>
    <zorder>groupBox</zorder>
    <zorder>imageLabel</zorder>
@@ -223,30 +196,43 @@ QSlider::handle:horizontal {
    <zorder>layoutWidget</zorder>
    <zorder>startToRunButton</zorder>
    <zorder>layoutWidget_2</zorder>
+   <zorder>mainFrameRateLabel</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1900</width>
+     <width>1160</width>
      <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_1">
     <property name="title">
-     <string>菜单1</string>
+     <string>Tools</string>
     </property>
+    <addaction name="action"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string>菜单2</string>
+     <string>Help</string>
     </property>
+    <addaction name="action_2"/>
    </widget>
    <addaction name="menu_1"/>
    <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="action">
+   <property name="text">
+    <string>参数设置...</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>关于...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
