@@ -10,6 +10,7 @@ FaceDetector::~FaceDetector()
 
 }
 
+//人脸检测
 bool FaceDetector::detect(cv::Mat& grayImg, double scale, BoundingBox& boundingBox){
     std::vector<cv::Rect> faces;
     cv::Mat smallImg = cv::Mat(cvRound(grayImg.rows / scale), cvRound(grayImg.cols / scale), CV_8UC1);

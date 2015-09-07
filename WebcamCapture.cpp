@@ -2,6 +2,7 @@
 
 WebcamCapture* WebcamCapture::ptr2WebcamCapture = nullptr;
 
+//单例模式构造函数
 WebcamCapture::WebcamCapture()
 {
     if (cap.open(0)) {
@@ -13,6 +14,7 @@ WebcamCapture::WebcamCapture()
     }
 }
 
+//单例模式的实例化函数
 WebcamCapture* WebcamCapture::getInstance(){
     if(WebcamCapture::ptr2WebcamCapture == nullptr){
         WebcamCapture::ptr2WebcamCapture = new WebcamCapture();
@@ -27,6 +29,7 @@ WebcamCapture::~WebcamCapture()
     }
 }
 
+//开始进行图像捕获
 void WebcamCapture::start(){
     forever{
         cv::Mat rawImg;

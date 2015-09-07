@@ -162,6 +162,7 @@ void  YawAnalyser::calculateZoneMap(){
 }
 
 
+//判断当前坐标是否在脸的区域内部
 bool YawAnalyser::isSinglePointInFace(int rowIndex, int columnIndex){
     if(columnIndex <= this->currentAlignment.at<double>(20,0)){
         for(int keypointIndex = 0; keypointIndex <= 20; keypointIndex++){

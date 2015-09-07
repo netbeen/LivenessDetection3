@@ -8,17 +8,20 @@ Utils::Utils()
 
 }
 
+//在input图像上绘制一系列点
 void Utils::drawPoint(cv::Mat& input, cv::Mat_<double>& shape){
     for (int i = 0; i < shape.rows; i++) {
         circle(input, cv::Point2d(shape(i, 0), shape(i, 1)), 3, cv::Scalar(0, 255, 0), -1, 8, 0);
     }
 }
 
+//在input图像上绘制矩形
 void Utils::drawRect(cv::Mat& input, BoundingBox& boundingBox){
     cv::rectangle(input, boundingBox.returnRect(), cv::Scalar(0, 255, 255), 3, 8, 0);
     return;
 }
 
+//在input上绘制有偏移的矩形
 void Utils::drawRect(cv::Mat &input, std::vector<cv::Rect>& eyesRects, int offsetX, int offsetY){
     for(cv::Rect& rectElem : eyesRects){
         rectElem.x +=offsetX;        //加上人脸框X轴的偏移
@@ -27,6 +30,7 @@ void Utils::drawRect(cv::Mat &input, std::vector<cv::Rect>& eyesRects, int offse
     }
 }
 
+//随机化vector内的元素位置
 void Utils::randomizeVector(std::vector<std::string>& inputVector){
     const int swapCount = inputVector.size();
     for(int i = 0; i < swapCount; ++i){
@@ -47,6 +51,7 @@ Mat_<double> Utils::getMeanShape(const vector<Mat_<double> >& shapes, const vect
     return result;
 }
 
+//
 Mat_<double> Utils::projectShape(const Mat_<double>& shape, const BoundingBox& bounding_box) {
     Mat_<double> temp(shape.rows, 2);
     for (int j = 0; j < shape.rows; j++) {
@@ -56,6 +61,7 @@ Mat_<double> Utils::projectShape(const Mat_<double>& shape, const BoundingBox& b
     return temp;
 }
 
+//
 Mat_<double> Utils::reProjectShape(const Mat_<double>& shape, const BoundingBox& bounding_box) {
     Mat_<double> temp(shape.rows, 2);
     for (int j = 0; j < shape.rows; j++) {
@@ -97,8 +103,8 @@ void Utils::SimilarityTransform(const Mat_<double>& shape1, const Mat_<double>& 
     Mat_<double> covariance1, covariance2;	//covariance = 协方差
     Mat_<double> mean1, mean2;
     // calculate covariance matrix
-    calcCovarMatrix(temp1, covariance1, mean1, CV_COVAR_COLS);	//计算temp1的协方差
-    calcCovarMatrix(temp2, covariance2, mean2, CV_COVAR_COLS);
+    cv::calcCovarMatrix(temp1, covariance1, mean1, CV_COVAR_COLS);	//计算temp1的协方差
+    cv::calcCovarMatrix(temp2, covariance2, mean2, CV_COVAR_COLS);
 
     double s1 = sqrt(norm(covariance1));
     double s2 = sqrt(norm(covariance2));
@@ -122,6 +128,7 @@ void Utils::SimilarityTransform(const Mat_<double>& shape1, const Mat_<double>& 
     rotation(1, 1) = cos_theta;
 }
 
+//计算协方差
 double Utils::calculate_covariance(const vector<double>& v_1, const vector<double>& v_2) {
     assert(v_1.size() == v_2.size());
     assert(v_1.size() != 0);
@@ -142,6 +149,7 @@ double Utils::calculate_covariance(const vector<double>& v_1, const vector<doubl
     return exp_3 / v_1.size();
 }
 
+//计算标准差
 double Utils::calculateStandardDeviation(const vector<double>& v) {
     assert(v.size() != 0);
     double sum = 0;
@@ -156,6 +164,7 @@ double Utils::calculateStandardDeviation(const vector<double>& v) {
 
 }
 
+//计算皮尔逊相关系数
 double Utils::calculatePearsonCorrelation(const vector<double>& v_1, const vector<double>& v_2) {
     assert(v_1.size() == v_2.size());
     assert(v_1.size() != 0);

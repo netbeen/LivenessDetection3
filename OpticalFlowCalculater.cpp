@@ -8,6 +8,7 @@ OpticalFlowCalculater::OpticalFlowCalculater()
 
 }
 
+//单例模式的实例化函数
 OpticalFlowCalculater* OpticalFlowCalculater::getInstance(){
     if(OpticalFlowCalculater::ptr2OpticalFlowCalculater == nullptr){
         OpticalFlowCalculater::ptr2OpticalFlowCalculater = new OpticalFlowCalculater();
@@ -15,6 +16,7 @@ OpticalFlowCalculater* OpticalFlowCalculater::getInstance(){
     return OpticalFlowCalculater::ptr2OpticalFlowCalculater;
 }
 
+//计算光流
 void OpticalFlowCalculater::doCalc(cv::Mat grayImg){
     if(this->previousFrame.empty()){
         this->previousFrame = grayImg;

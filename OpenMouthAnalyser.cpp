@@ -1,6 +1,7 @@
 #include "OpenMouthAnalyser.h"
 #include <QThread>
 
+//构造函数
 OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentValid(false),openMouthThreshold(2.5)
 {
     webcamCapture = WebcamCapture::getInstance();
@@ -10,6 +11,7 @@ OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentVa
     QObject::connect(faceAligner,SIGNAL(alignmentCompete(cv::Mat_<double>)),this,SLOT(receiveNewAlignment(cv::Mat_<double>)));
 }
 
+//开始函数，连接上webcam的信号至对应的槽
 void OpenMouthAnalyser::start(){
     timeoutTimer = new QTimer();
     QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));      //绑定计时器事件
@@ -19,6 +21,7 @@ void OpenMouthAnalyser::start(){
 
 }
 
+//收到新的摄像头图像的槽函数
 void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
     cv::cvtColor(newFrame,this->grayImage,cv::COLOR_BGR2GRAY);
     if (this->faceDetector->detect(this->grayImage,5, this->faceBoundingBox)) {       //调用FaceDetector，如果检测到脸
@@ -38,6 +41,7 @@ void OpenMouthAnalyser::receiveNewFrame(cv::Mat newFrame){
     //cv::imshow("OpenMouthAnalyser", grayImage);
 }
 
+//计时器超时的槽函数
 void OpenMouthAnalyser::timeout(){
 
     timeoutTimer->stop();
@@ -47,6 +51,7 @@ void OpenMouthAnalyser::timeout(){
     emit this->done(false);
 }
 
+//若检测张嘴成功的函数
 void OpenMouthAnalyser::success(){
 
     timeoutTimer->stop();
@@ -56,6 +61,7 @@ void OpenMouthAnalyser::success(){
     emit this->done(true);
 }
 
+//当收到新的对齐的槽函数
 void OpenMouthAnalyser::receiveNewAlignment(cv::Mat_<double> newAlignment){
     this->currentAlignment = newAlignment;
     this->isCurrentAlignmentValid = true;
