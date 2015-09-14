@@ -21,6 +21,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateImage(cv::Mat newImage){
+    cv::cvtColor(newImage,newImage,cv::COLOR_BGR2RGB);      //修正BGR显示模式为RGB
     QImage displayImage = QImage( static_cast<const unsigned char*>(newImage.data), newImage.cols, newImage.rows, QImage::Format_RGB888 );
     ui->imageLabel->setPixmap( QPixmap::fromImage(displayImage) );
 }
