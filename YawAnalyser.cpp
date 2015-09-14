@@ -1,5 +1,6 @@
 #include "YawAnalyser.h"
 #include <cmath>
+#include <QSound>
 
 //构造函数
 YawAnalyser::YawAnalyser():totalProgressTimeMS(5000),isCurrentAlignmentValid(false),isOpticalFlowCalculaterBusy(false),sliderPhase(0),isProgressTimeout(false)
@@ -21,6 +22,7 @@ YawAnalyser::YawAnalyser():totalProgressTimeMS(5000),isCurrentAlignmentValid(fal
 
 //启动入口函数
 void YawAnalyser::start(){
+    QSound::play("/home/netbeen/QtWorkspace/LivenessDetection3/请跟随滑块摇头.wav");
     std::cout << "YawAnalyser at " << QThread::currentThreadId()<< std::endl;
     QObject::connect(webcamCapture,SIGNAL(newImageCaptured(cv::Mat)),this,SLOT(receiveNewFrame(cv::Mat)));  //绑定接收摄像头事件
     isProgressTimeout=false;

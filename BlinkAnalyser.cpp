@@ -1,5 +1,6 @@
 #include "BlinkAnalyser.h"
 #include "QThread"
+#include <QSound>
 
 //眨眼检测类构造函数
 BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(6),timeoutTimeMs(10000)
@@ -11,6 +12,7 @@ BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(6)
 }
 
 void BlinkAnalyser::start(){
+    QSound::play("/home/netbeen/QtWorkspace/LivenessDetection3/请眨眼.wav");
     timeoutTimer = new QTimer();
     QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));
     std::cout << "BlinkAnalyser at " << QThread::currentThreadId()<< std::endl;

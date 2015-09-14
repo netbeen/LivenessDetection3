@@ -1,5 +1,6 @@
 #include "OpenMouthAnalyser.h"
 #include <QThread>
+#include <QSound>
 
 //构造函数
 OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentValid(false),openMouthThreshold(2.5)
@@ -13,6 +14,7 @@ OpenMouthAnalyser::OpenMouthAnalyser():timeoutTimeMs(10000),isCurrentAlignmentVa
 
 //开始函数，连接上webcam的信号至对应的槽
 void OpenMouthAnalyser::start(){
+    QSound::play("/home/netbeen/QtWorkspace/LivenessDetection3/请张嘴.wav");
     timeoutTimer = new QTimer();
     QObject::connect(timeoutTimer,SIGNAL(timeout()),this,SLOT(timeout()));      //绑定计时器事件
     std::cout << "OpenMouthAnalyser at " << QThread::currentThreadId()<< std::endl;
