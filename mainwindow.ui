@@ -189,14 +189,37 @@ QSlider::handle:horizontal {
      <string>0</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>89</y>
+      <width>141</width>
+      <height>651</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    border-width:1px;
+   border-style:solid;
+  border-color:#666666;
+}</string>
+    </property>
+    <property name="title">
+     <string>Parament Setting</string>
+    </property>
+   </widget>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>faceAlignmentFrameRate</zorder>
+   <zorder>label_4</zorder>
+   <zorder>opticalFlowFrameRate</zorder>
    <zorder>groupBox</zorder>
    <zorder>imageLabel</zorder>
    <zorder>horizontalSlider</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
    <zorder>startToRunButton</zorder>
-   <zorder>layoutWidget_2</zorder>
    <zorder>mainFrameRateLabel</zorder>
+   <zorder>groupBox_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

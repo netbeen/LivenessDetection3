@@ -1,6 +1,7 @@
 #include "BlinkAnalyser.h"
 #include "QThread"
 
+//眨眼检测类构造函数
 BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(6),timeoutTimeMs(10000)
 {
     webcamCapture = WebcamCapture::getInstance();
@@ -41,6 +42,7 @@ void BlinkAnalyser::receiveNewFrame(cv::Mat newFrame){
     //cv::imshow("BlinkAnalyser", grayImage);
 }
 
+//眨眼计时器超时的slot函数
 void BlinkAnalyser::timeout(){
 
     timeoutTimer->stop();
@@ -50,6 +52,7 @@ void BlinkAnalyser::timeout(){
     std::cout << "BlinkAnalyser Time out!"<<std::endl;
 }
 
+//眨眼检测成功
 void BlinkAnalyser::success(){
 
     timeoutTimer->stop();

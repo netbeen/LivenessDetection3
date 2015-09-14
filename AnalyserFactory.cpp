@@ -1,5 +1,6 @@
 #include "AnalyserFactory.h"
 
+//工厂类构造函数
 AnalyserFactory::AnalyserFactory()
 {
     analyserType.insert("blink");
