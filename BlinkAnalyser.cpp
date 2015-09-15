@@ -11,6 +11,7 @@ BlinkAnalyser::BlinkAnalyser():blinkCount(0),isEyesOpen(false),blinkThreshold(6)
 
 }
 
+//开启检测眨眼线程
 void BlinkAnalyser::start(){
     QSound::play("/home/netbeen/QtWorkspace/LivenessDetection3/请眨眼.wav");
     timeoutTimer = new QTimer();

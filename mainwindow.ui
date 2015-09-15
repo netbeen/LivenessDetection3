@@ -20,7 +20,7 @@
    <widget class="QLabel" name="imageLabel">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>190</x>
       <y>120</y>
       <width>800</width>
       <height>600</height>
@@ -75,7 +75,7 @@ QSlider::handle:horizontal {
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>180</x>
       <y>90</y>
       <width>820</width>
       <height>651</height>
@@ -101,7 +101,7 @@ QSlider::handle:horizontal {
    <widget class="QPushButton" name="startToRunButton">
     <property name="geometry">
      <rect>
-      <x>1000</x>
+      <x>1020</x>
       <y>640</y>
       <width>111</width>
       <height>101</height>
@@ -194,7 +194,7 @@ QSlider::handle:horizontal {
      <rect>
       <x>9</x>
       <y>89</y>
-      <width>141</width>
+      <width>151</width>
       <height>651</height>
      </rect>
     </property>
