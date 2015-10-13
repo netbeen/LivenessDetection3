@@ -2,7 +2,9 @@
 #define OPTICALFLOWCALCULATER_H
 
 #include <QObject>
-#include <opencv2/opencv.hpp>
+//#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/video.hpp>
 
 class OpticalFlowCalculater : public QObject
 {

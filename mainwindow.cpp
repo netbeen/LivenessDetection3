@@ -28,7 +28,7 @@ void MainWindow::updateImage(cv::Mat newImage){
 
 void MainWindow::on_startToRunButton_clicked()
 {
-    emit startToRunButtonClicked();
+    emit this->startToRunButtonClicked();
 }
 
 void MainWindow::receiveSliderPercentage(int percentage){

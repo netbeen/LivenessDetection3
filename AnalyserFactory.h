@@ -4,6 +4,7 @@
 #include <BlinkAnalyser.h>
 #include <OpenMouthAnalyser.h>
 #include <YawAnalyser.h>
+#include <set>
 
 class AnalyserFactory
 {

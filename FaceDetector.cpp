@@ -2,7 +2,8 @@
 
 FaceDetector::FaceDetector()
 {
-    this->cascadeClassifier.load("/home/netbeen/workspace/20141015-ESR-HelenDatabase/data/haarcascade_frontalface_alt2.xml");
+    cv::String faceDetectorPath = "/home/netbeen/workspace/20141015-ESR-HelenDatabase/data/haarcascade_frontalface_alt2.xml";
+    this->cascadeClassifier.load(faceDetectorPath);
 }
 
 FaceDetector::~FaceDetector()

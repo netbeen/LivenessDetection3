@@ -2,7 +2,8 @@
 
 EyeDetector::EyeDetector()
 {
-    this->cascadeClassifier.load("/usr/local/share/OpenCV/haarcascades/haarcascade_eye.xml");
+    cv::String eyeDetectorPath = "/usr/local/share/OpenCV/haarcascades/haarcascade_eye.xml";
+    this->cascadeClassifier.load(eyeDetectorPath);
 }
 
 EyeDetector::~EyeDetector()
