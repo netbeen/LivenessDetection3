@@ -13,7 +13,7 @@ FaceAligner* FaceAligner::getInstance(){
 FaceAligner::FaceAligner():initial_number(20),landmarkNum(114)
 {
     regressor = ShapeRegressor();
-    regressor.load("/home/netbeen/workspace/20141015-ESR-HelenDatabase/data/model-Helen114-HaarAlt2-10-120.txt");
+    regressor.load("/home/netbeen/LivenessDetectionTrainFile/model-Helen114-HaarAlt2-10-120.txt");
 }
 
 FaceAligner::~FaceAligner()
